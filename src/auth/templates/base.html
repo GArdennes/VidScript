@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<title>{% block title %}{% endblock %} - VidScript</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+    <h1>VidScript</h1>
+    <ul>
+        <li><a href="{{ url_for('login') }}">Log In</a></li>
+    </ul>
+</nav>
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+</section>
