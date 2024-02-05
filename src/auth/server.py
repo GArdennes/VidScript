@@ -41,19 +41,39 @@ def login():
             if email != user_data[0] or password != user_data[1]:
                 return "Invalid credentials", 401
             else:
-                return "Login successful", 200
+                #return "Login successful", 200
     #generates jwt token            
-                #return createJWT(email, os.environ.get("JWT_SECTRET"), True)
+                return createJWT(email, os.environ.get("JWT_SECTRET"), True)
         else:
             return "Invalid credentials", 401
     else:
         return render_template("login.html"), 200
                         
-@app.route("/validate", methods=["POST"])
+@app.route("/validate", methods=["POST", "GET"])
 def validate():
     """
+    Authorize and authenticate Jason Web Token
     """
-    pass
+    #extract the token
+    if request.method == "POST":
+        encodedjwt = request.form.get("token")
+    #check for missing parameters
+        if not encodedjwt:
+            return "Missing token", 401
+    #decode the token
+        encodedjwt = encodedjwt.split(" ").[1]
+        try:
+    #return decoded jwt 
+            decoded = jwt.decode(
+                encodedjwt, os.environ.get("JWT_SECRET"), algorithms=["HS256"]
+            )
+        except Exception as error:
+            print(error)
+            return "Not authorized", 403  
+        return decoded, 200
+    else:
+        return render_template("validate.html"), 200
+    
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -63,8 +83,19 @@ def logout():
 
 def createJWT(username, secret, authz):
     """
+    Generate JWT token as string
     """
-    pass
+    return jwt.encode(
+        {
+            "username": username,
+            "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+            + datetime.timedelta(days=1),
+            "iat": datetime.datetime.utcnow(),
+            "admin": authz,
+        },
+        secret,
+        algorithm="HS256",
+    )
 
 
 if __name__ == "__main__":

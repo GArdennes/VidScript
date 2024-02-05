@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<form name="validateform" action="{{ url_for('validate') }}" method="POST">
+    <!-- Other form fields (username, password, etc.) -->
+    <label for="token">Email</label>
+    <input name="token" id="token" required>
+    <input type="submit" value="validate">
+</form>
