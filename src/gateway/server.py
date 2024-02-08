@@ -20,7 +20,7 @@ mongo_mp3 = PyMongo(app, uri="mongodb://host.minikube.internal:27017/mp3s")
 fs_videos = gridfs.GridFS(mongo_video.db)
 fs_mp3s = gridfs.GridFS(mongo_mp3.db)
 
-connection = pika.BlockingConnection()
+connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel = connection.channel()
 
 
