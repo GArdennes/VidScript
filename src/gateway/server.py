@@ -24,17 +24,20 @@ connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel = connection.channel()
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """
     API Interface for AUTH service
     """
-    token, err = access.login(request)
+    if request.method == "POST":
+        token, err = access.login(request)
 
-    if not err:
-        return token
+        if not err:
+            return token
+        else:
+            return err
     else:
-        return err
+        render_template("login.html")
 
 
 @app.route("/upload", methods=["GET", "POST"])
