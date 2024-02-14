@@ -37,7 +37,7 @@ def login():
         else:
             return err
     else:
-        render_template("login.html")
+       return render_template("login.html")
 
 
 @app.route("/upload", methods=["GET", "POST"])

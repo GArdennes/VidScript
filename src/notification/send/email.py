@@ -7,7 +7,7 @@ def notification(message):
     message = json.loads(message)
     mp3_fid = message["mp3_fid"]
     sender_address = os.environ.get("GMAIL_ADDRESS", "ddohomo@gmail.com")
-    sender_password = os.environ.get("GMAIL_PASSWORD", "rVNZAVHkE34-6uw")
+    sender_password = os.environ.get("GMAIL_PASSWORD", "flcp kzup wqyx yatl")
     receiver_address = message["username"]
 
     msg = EmailMessage()

@@ -24,7 +24,7 @@ def main():
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
     channel.basic_consume(
-        queue=os.environ.get("VIDEO_QUEUE"), on_message_callback=callback
+        queue=os.environ.get("VIDEO_QUEUE", 'video'), on_message_callback=callback
     )
 
     print("Waiting for messages. To exit press CTRL+C")

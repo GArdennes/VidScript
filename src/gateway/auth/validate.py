@@ -3,15 +3,16 @@ import os, requests
 
 def token(request):
     if not "Authorization" in request.headers:
-        return None, ("missing credentials", 401)
+        return None, ("missing token authorization", 401)
 
     token = request.headers["Authorization"]
+    #token = request.form.get('token')
 
     if not token:
         return None, ("missing credentials", 401)
 
     response = requests.post(
-        f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/validate",
+        f"http://{os.environ.get('AUTH_SVC_ADDRESS', '127.0.0.1:5000')}/validate",
         headers={"Authorization": token},
     )
 
