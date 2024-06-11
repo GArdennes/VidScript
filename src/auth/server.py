@@ -13,7 +13,7 @@ mysql = MySQL(app)
 #configuration
 app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST", "localhost")
 app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER", "auth_user")
-app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "Auth123")
+app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
 app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "auth")
 app.config["MYSQL_PORT"] = int(os.environ.get("MYSQL_PORT", 3306))
 
