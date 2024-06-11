@@ -24,26 +24,30 @@ def login():
     """
     #retrieve the username and password
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")    
+        auth = request.authorization
+        #username = request.json.get("username")
+        #password = request.json.get("password") 
 
     #check for missing credentials
-        if not email or not password:
+        if not auth:
             return "Please provide both email address and password.", 400
     #query the database
         cursor = mysql.connection.cursor()
         cursor.execute(
-            "SELECT email, password FROM user WHERE email = %s", (email,)
+            "SELECT email, password FROM user WHERE email = %s", (auth.username,)
+            #"SELECT email, password FROM user WHERE email = %s", (username,)
         )
         user_data = cursor.fetchone()
     #verifies the credentials
         if user_data:
-            if email != user_data[0] or password != user_data[1]:
-                return "Invalid credentials", 401
+            if auth.username != user_data[0] or auth.password != user_data[1]:
+            #if username != user_data[0] or password != user_data[1]:
+                return "Incorrect credentials", 401
             else:
                 #return "Login successful", 200
     #generates jwt token            
-                return createJWT(email, os.environ.get("JWT_SECTRET"), True)
+                return createJWT(auth.username, os.environ.get("JWT_SECRET", 'FortKnox'), True)
+                #return createJWT(username, os.environ.get("JWT_SECRET", 'FortKnox'), True)
         else:
             return "Invalid credentials", 401
     else:
@@ -57,7 +61,7 @@ def validate():
     """
     #extract the token
     if request.method == "POST":
-        encodedjwt = request.form.get("token")
+        encodedjwt = request.headers["Authorization"]
     #check for missing parameters
         if not encodedjwt:
             return "Missing token", 401
@@ -66,7 +70,7 @@ def validate():
         try:
     #return decoded jwt 
             decoded = jwt.decode(
-                encodedjwt, os.environ.get("JWT_SECRET"), algorithms=["HS256"]
+                encodedjwt, os.environ.get("JWT_SECRET", 'FortKnox'), algorithms=["HS256"]
             )
         except Exception as error:
             print(error)

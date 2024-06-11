@@ -20,21 +20,31 @@ mongo_mp3 = PyMongo(app, uri="mongodb://host.minikube.internal:27017/mp3s")
 fs_videos = gridfs.GridFS(mongo_video.db)
 fs_mp3s = gridfs.GridFS(mongo_mp3.db)
 
-connection = pika.BlockingConnection()
+connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel = connection.channel()
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/", strict_slashes=False)
+def index():
+    """
+    API interface for accessing the main page
+    """
+    return render_template('homepage.html')
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """
     API Interface for AUTH service
     """
-    token, err = access.login(request)
+    if request.method == "POST":
+        token, err = access.login(request)
 
-    if not err:
-        return token
+        if not err:
+            return token
+        else:
+            return err
     else:
-        return err
+       return render_template("login.html")
 
 
 @app.route("/upload", methods=["GET", "POST"])
