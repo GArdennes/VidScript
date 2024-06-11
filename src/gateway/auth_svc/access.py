@@ -14,7 +14,6 @@ def login(request):
 
     response = requests.post(
         f"http://{os.environ.get('AUTH_SVC_ADDRESS', '127.0.0.1:5000')}/login", 
-        #email, password
         auth=basicAuth
     )
 

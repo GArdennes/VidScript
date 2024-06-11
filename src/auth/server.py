@@ -24,7 +24,9 @@ def login():
     """
     #retrieve the username and password
     if request.method == "POST":
-        auth = request.authorization 
+        auth = request.authorization
+        #username = request.json.get("username")
+        #password = request.json.get("password") 
 
     #check for missing credentials
         if not auth:
@@ -33,16 +35,19 @@ def login():
         cursor = mysql.connection.cursor()
         cursor.execute(
             "SELECT email, password FROM user WHERE email = %s", (auth.username,)
+            #"SELECT email, password FROM user WHERE email = %s", (username,)
         )
         user_data = cursor.fetchone()
     #verifies the credentials
         if user_data:
             if auth.username != user_data[0] or auth.password != user_data[1]:
+            #if username != user_data[0] or password != user_data[1]:
                 return "Incorrect credentials", 401
             else:
                 #return "Login successful", 200
     #generates jwt token            
                 return createJWT(auth.username, os.environ.get("JWT_SECRET", 'FortKnox'), True)
+                #return createJWT(username, os.environ.get("JWT_SECRET", 'FortKnox'), True)
         else:
             return "Invalid credentials", 401
     else:

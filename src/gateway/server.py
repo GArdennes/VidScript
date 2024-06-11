@@ -24,6 +24,13 @@ connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel = connection.channel()
 
 
+@app.route("/", strict_slashes=False)
+def index():
+    """
+    API interface for accessing the main page
+    """
+    return render_template('homepage.html')
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """
